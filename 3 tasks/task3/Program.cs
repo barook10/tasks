@@ -82,8 +82,8 @@ class Program
                 }
             }
 
-        }//end if
-    }//end findPath
+        }
+    }
     public void exit()
     {
         Console.WriteLine("Totoshka: Safe Zone");
@@ -119,7 +119,7 @@ class Program
     }
 
 
-    // end of main
+    
 
 
 }
