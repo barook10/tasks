@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- USE DEVELOPMENT VERSION -->
+    <script src="https://unpkg.com/konva@8.3.12/konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Transform Limits Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div>
+        <canvas id="canvas"></canvas>
+        <button type="button" class="btn btn-success    pull-left" onclick="rotateLeft()"><span class="glyphicon glyphicon-arrow-left"></span> Rotate Left</button>
+
+        <button type="button" class="btn btn-success pull-right" onclick="rotateRight()"><span class="glyphicon glyphicon-arrow-right"></span> Rotate Right</button>
+
+        <button type="button" onclick="increase()">+ Increase</button>
+        <button type="button" onclick="decrease()">- Decrease</button>
+    </div>
+
+    <div id="container"></div>
+    <script>
+
+
+    let angle = 0;
+     //rotate right
+    function rotateRight(){
+  
+    let img = document.getElementById('canvas');
+    angle += 90;
+  
+    canvas.style.transform = "rotate("+angle+"deg)";
+ }
+
+  //rotate left
+ function rotateLeft(){
+  
+     let fig = document.getElementById('canvas');
+     angle -= 90;
+  
+     canvas.style.transform = "rotate("+angle+"deg)";
+ }
+
+ //increase size
+ function increase() {
+    let fig = document.getElementById('canvas');
+    let width = fig.clientWidth;
+    if (width == 100) {
+        alert("You have reached the maximum zoom level.");
+    } else {
+        fig.style.width = (width + 20) + "px";
+    }
+}
+
+//decrease size
+function decrease() {
+    let fig = document.getElementById('canvas');
+    let width = fig.clientWidth;
+    if (width == 40) {
+        alert("You have reached the minimum zoom level.");
+    } else {
+        fig.style.width = (width - 20) + "px";
+    }
+}
+
+
+    // getting a reference to our HTML element
+ 
+
+    // getting a reference to our HTML element
+const canvas = document.querySelector('canvas')
+
+
+// initiating 2D context on it
+function aggregation() {
+    const ctx = canvas.getContext('2d')
+    ctx.beginPath();
+    
+    ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    const ctx1 = canvas.getContext('2d')
+    ctx1.beginPath();
+    ctx1.moveTo(0, -100);
+    ctx1.lineTo(40, 100);
+    ctx1.stroke(); 
+
+    const ctx2 = canvas.getContext('2d')
+    ctx2.beginPath();
+    ctx2.moveTo(300, 50)
+    ctx2.lineTo(50, 150)
+    ctx2.arc(2, 1, 1, 0, 2 * Math.PI, true);
+    ctx2.stroke();
+
+    //aggregating the figures
+const merge = {
+    ...ctx,
+    ...ctx1,
+    ...ctx2
+}
+}
+aggregation()
+
+
+      //using konva library to draw indivitual figures
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+
+      let stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height,
+      });
+
+      let layer = new Konva.Layer();
+      stage.add(layer);
+
+      //drawing circle
+      let circle = new Konva.Circle({
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        radius: 70,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: true
+      });
+
+      // add the shape to the layer
+      layer.add(circle);
+      
+      //drawing line
+      let redLine = new Konva.Line({
+        x: stage.width = 200,
+        points: [50, 50, 50, 200, 100],
+        stroke: 'red',
+        strokeWidth: 10,
+        lineCap: 'round',
+        lineJoin: 'round',
+        draggable: true
+      });
+      layer.add(redLine);
+      
+      // drawing point 
+      let greenLine = new Konva.Line({
+        x: stage.width = 100,
+        points: [50, 100, 50, 100],
+        stroke: 'green',
+        strokeWidth: 10,
+        lineCap: 'round',
+        lineJoin: 'round',
+        draggable: true
+      });
+      layer.add(greenLine);
+
+      let MAX_WIDTH = 200;
+      // create new transformer
+      let tr = new Konva.Transformer({
+        boundBoxFunc: function (oldBoundBox, newBoundBox) {
+          // "boundBox" is an object with
+          // x, y, width, height and rotation properties
+          // transformer tool will try to fit nodes into that box
+
+          // the logic is simple, if new width is too big
+          // we will return previous state
+          if (Math.abs(newBoundBox.width) > MAX_WIDTH) {
+            return oldBoundBox;
+          }
+
+          return newBoundBox;
+        },
+      });
+      layer.add(tr);
+      tr.nodes([circle]);
+           
+    </script>
+  </body>
+</html>
